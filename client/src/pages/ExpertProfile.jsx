@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { expertsApi } from '../utils/api';
 import { useAuth } from '../context/AuthContext';
+import { MOCK_EXPERTS } from '../utils/mockData';
 
 export default function ExpertProfile() {
   const { id } = useParams();
@@ -11,7 +12,10 @@ export default function ExpertProfile() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    expertsApi.get(id).then(r => setExpert(r.data)).catch(console.error).finally(() => setLoading(false));
+    expertsApi.get(id)
+      .then(r => setExpert(r?.data && !Array.isArray(r.data) ? r.data : MOCK_EXPERTS.find(e => e.id === Number(id)) ?? null))
+      .catch(() => setExpert(MOCK_EXPERTS.find(e => e.id === Number(id)) ?? null))
+      .finally(() => setLoading(false));
   }, [id]);
 
   if (loading) {

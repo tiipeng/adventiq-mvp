@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { labsApi, feasibilityApi } from '../utils/api';
 import { useAuth } from '../context/AuthContext';
+import { MOCK_LABS } from '../utils/mockData';
 
 export default function LabProfile() {
   const { id } = useParams();
@@ -17,7 +18,10 @@ export default function LabProfile() {
   const [feasLoading, setFeasLoading] = useState(false);
 
   useEffect(() => {
-    labsApi.get(id).then(r => setLab(r.data)).catch(console.error).finally(() => setLoading(false));
+    labsApi.get(id)
+      .then(r => setLab(r?.data && !Array.isArray(r.data) ? r.data : MOCK_LABS.find(l => l.id === Number(id)) ?? null))
+      .catch(() => setLab(MOCK_LABS.find(l => l.id === Number(id)) ?? null))
+      .finally(() => setLoading(false));
   }, [id]);
 
   async function runFeasibility() {

@@ -5,6 +5,7 @@ import Sidebar from '../components/Sidebar';
 import ExpertCard from '../components/ExpertCard';
 import LabCard from '../components/LabCard';
 import { expertsApi, labsApi } from '../utils/api';
+import { MOCK_EXPERTS, MOCK_LABS } from '../utils/mockData';
 
 const CATEGORIES = [
   { value: 'ai_ml',        label: 'AI & Machine Learning',      tags: ['Machine Learning', 'NLP', 'Computer Vision'] },
@@ -39,10 +40,12 @@ export default function ProblemForm() {
         (form.type === 'expert' || form.type === 'both') ? expertsApi.list(params) : Promise.resolve({ data: [] }),
         (form.type === 'lab'    || form.type === 'both') ? labsApi.list({ search: form.description }) : Promise.resolve({ data: [] }),
       ]);
-      setExperts(eRes.data);
-      setLabs(lRes.data);
+      setExperts(Array.isArray(eRes?.data) ? eRes.data : MOCK_EXPERTS);
+      setLabs(Array.isArray(lRes?.data) ? lRes.data : MOCK_LABS);
     } catch (e) {
       console.error(e);
+      setExperts(MOCK_EXPERTS);
+      setLabs(MOCK_LABS);
     } finally {
       setLoading(false);
       setStep(2);

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import ExpertCard from '../components/ExpertCard';
 import { expertsApi } from '../utils/api';
+import { MOCK_EXPERTS } from '../utils/mockData';
 
 const EXPERTISE_OPTIONS = ['Machine Learning', 'NLP', 'Computer Vision', 'Biomedical', 'Sustainability', 'Regulatory', 'Materials Science'];
 
@@ -13,7 +14,10 @@ export default function ExpertsList() {
   useEffect(() => {
     const params = Object.fromEntries(Object.entries(filters).filter(([, v]) => v !== ''));
     setLoading(true);
-    expertsApi.list(params).then(r => setExperts(r.data)).catch(console.error).finally(() => setLoading(false));
+    expertsApi.list(params)
+      .then(r => setExperts(Array.isArray(r?.data) ? r.data : MOCK_EXPERTS))
+      .catch(() => setExperts(MOCK_EXPERTS))
+      .finally(() => setLoading(false));
   }, [filters]);
 
   function setFilter(key, val) {

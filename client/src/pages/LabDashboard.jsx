@@ -26,7 +26,7 @@ export default function LabDashboard() {
   }, [profile]);
 
   useEffect(() => {
-    bookingsApi.list().then(r => setBookings(r.data)).catch(console.error).finally(() => setLoading(false));
+    bookingsApi.list().then(r => setBookings(Array.isArray(r?.data) ? r.data : [])).catch(() => setBookings([])).finally(() => setLoading(false));
   }, []);
 
   async function handleStatusChange(bookingId, status) {

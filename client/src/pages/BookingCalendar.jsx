@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar';
 import { expertsApi, labsApi } from '../utils/api';
+import { MOCK_EXPERTS, MOCK_LABS } from '../utils/mockData';
 
 function getDaysInMonth(year, month) {
   return new Date(year, month + 1, 0).getDate();
@@ -28,7 +29,11 @@ export default function BookingCalendar() {
 
   useEffect(() => {
     const api = type === 'expert' ? expertsApi.get(id) : labsApi.get(id);
-    api.then(r => setProvider(r.data)).catch(console.error).finally(() => setLoading(false));
+    const MOCK = type === 'expert' ? MOCK_EXPERTS : MOCK_LABS;
+    api
+      .then(r => setProvider(r?.data && !Array.isArray(r.data) ? r.data : MOCK.find(x => x.id === Number(id)) ?? null))
+      .catch(() => setProvider(MOCK.find(x => x.id === Number(id)) ?? null))
+      .finally(() => setLoading(false));
   }, [type, id]);
 
   const availability = provider?.availability_json || {};

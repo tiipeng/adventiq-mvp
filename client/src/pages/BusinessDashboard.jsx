@@ -88,12 +88,12 @@ export default function BusinessDashboard() {
 
   useEffect(() => {
     bookingsApi.list()
-      .then(r => setBookings(r.data))
-      .catch(console.error)
+      .then(r => setBookings(Array.isArray(r?.data) ? r.data : []))
+      .catch(() => setBookings([]))
       .finally(() => setLoadingB(false));
     asyncApi.list()
-      .then(r => setAsyncQs(r.data))
-      .catch(console.error)
+      .then(r => setAsyncQs(Array.isArray(r?.data) ? r.data : []))
+      .catch(() => setAsyncQs([]))
       .finally(() => setLoadingA(false));
   }, []);
 

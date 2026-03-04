@@ -107,11 +107,11 @@ export default function ExpertDashboard() {
   });
 
   const loadBookings = useCallback(() => {
-    bookingsApi.list().then(r => setBookings(r.data)).catch(console.error).finally(() => setLoadingB(false));
+    bookingsApi.list().then(r => setBookings(Array.isArray(r?.data) ? r.data : [])).catch(() => setBookings([])).finally(() => setLoadingB(false));
   }, []);
 
   const loadAsync = useCallback(() => {
-    asyncApi.list().then(r => setAsyncQs(r.data)).catch(console.error).finally(() => setLoadingA(false));
+    asyncApi.list().then(r => setAsyncQs(Array.isArray(r?.data) ? r.data : [])).catch(() => setAsyncQs([])).finally(() => setLoadingA(false));
   }, []);
 
   useEffect(() => { loadBookings(); loadAsync(); }, [loadBookings, loadAsync]);

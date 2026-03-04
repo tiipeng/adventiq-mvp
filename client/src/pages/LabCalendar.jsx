@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { labsApi } from '../utils/api';
+import { MOCK_LABS } from '../utils/mockData';
 
 const CITIES = ['All', 'Munich', 'Warsaw', 'Dresden', 'Kraków'];
 
@@ -40,7 +41,10 @@ export default function LabCalendar() {
   useEffect(() => {
     const params = city !== 'All' ? { location: city } : {};
     setLoading(true);
-    labsApi.list(params).then(r => setLabs(r.data)).catch(console.error).finally(() => setLoading(false));
+    labsApi.list(params)
+      .then(r => setLabs(Array.isArray(r?.data) ? r.data : MOCK_LABS))
+      .catch(() => setLabs(MOCK_LABS))
+      .finally(() => setLoading(false));
   }, [city]);
 
   // Build a set of available dates per lab

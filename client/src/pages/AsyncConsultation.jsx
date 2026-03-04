@@ -3,6 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { expertsApi, asyncApi } from '../utils/api';
 import { useAuth } from '../context/AuthContext';
+import { MOCK_EXPERTS } from '../utils/mockData';
 
 const SLA_OPTIONS = [
   { hours: 48, price: 80, label: '48-hour response', desc: 'Standard — ideal for non-urgent questions', icon: '📬', recommended: false },
@@ -72,8 +73,8 @@ export default function AsyncConsultation() {
 
   useEffect(() => {
     expertsApi.get(expertId)
-      .then(r => setExpert(r.data))
-      .catch(console.error)
+      .then(r => setExpert(r?.data && !Array.isArray(r.data) ? r.data : MOCK_EXPERTS.find(e => e.id === Number(expertId)) ?? null))
+      .catch(() => setExpert(MOCK_EXPERTS.find(e => e.id === Number(expertId)) ?? null))
       .finally(() => setLoading(false));
   }, [expertId]);
 

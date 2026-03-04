@@ -4,6 +4,7 @@ import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar';
 import { expertsApi, labsApi } from '../utils/api';
 import { useAuth } from '../context/AuthContext';
+import { MOCK_EXPERTS, MOCK_LABS } from '../utils/mockData';
 
 const CATEGORIES = [
   { value: 'ai_ml',        label: 'AI & Machine Learning',    tags: ['Machine Learning', 'NLP', 'Computer Vision', 'Python', 'TensorFlow'] },
@@ -102,14 +103,20 @@ export default function AIRecommend() {
       ]);
 
       // Score and annotate experts
-      const scoredExperts = eRes.data.map(e => {
+      const rawExperts = Array.isArray(eRes?.data) ? eRes.data : MOCK_EXPERTS;
+      const scoredExperts = rawExperts.map(e => {
         const { score, reasons } = scoreExpert(e, keywords, categoryTags);
         return { ...e, _score: score, _reasons: reasons };
       });
 
-      setResults({ experts: scoredExperts, labs: lRes.data });
+      setResults({ experts: scoredExperts, labs: Array.isArray(lRes?.data) ? lRes.data : MOCK_LABS });
     } catch (e) {
       console.error(e);
+      const scoredExperts = MOCK_EXPERTS.map(e => {
+        const { score, reasons } = scoreExpert(e, keywords, categoryTags);
+        return { ...e, _score: score, _reasons: reasons };
+      });
+      setResults({ experts: scoredExperts, labs: MOCK_LABS });
     } finally {
       setLoading(false);
       setStep(2);

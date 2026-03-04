@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import LabCard from '../components/LabCard';
 import { labsApi } from '../utils/api';
+import { MOCK_LABS } from '../utils/mockData';
 
 // Leaflet imports (loaded lazily to avoid SSR issues)
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
@@ -62,7 +63,10 @@ export default function LabsList() {
     const params = Object.fromEntries(Object.entries(filters).filter(([k, v]) => v !== '' && k !== 'city'));
     if (filters.city) params.location = filters.city;
     setLoading(true);
-    labsApi.list(params).then(r => setLabs(r.data)).catch(console.error).finally(() => setLoading(false));
+    labsApi.list(params)
+      .then(r => setLabs(Array.isArray(r?.data) ? r.data : MOCK_LABS))
+      .catch(() => setLabs(MOCK_LABS))
+      .finally(() => setLoading(false));
   }, [filters]);
 
   function setFilter(key, val) {
