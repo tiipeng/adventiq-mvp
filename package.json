@@ -1,0 +1,16 @@
+{
+  "name": "adventiq",
+  "version": "1.0.0",
+  "description": "AdventIQ – We enable the Fast Forward. SaaS platform connecting businesses with expert consultants and university lab rentals.",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently --kill-others-on-fail \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "npm --prefix server run dev",
+    "dev:client": "npm --prefix client run dev",
+    "install:all": "npm install && npm --prefix server install && npm --prefix client install",
+    "seed": "npm --prefix server run seed"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
