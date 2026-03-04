@@ -3,3 +3,5 @@ node_modules
 dist
 build
 .DS_Store
+client/node_modules
+server/node_modules
