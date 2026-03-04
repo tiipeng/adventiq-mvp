@@ -71,4 +71,18 @@ export const adminApi = {
   bookings: params => api.get('/admin/bookings', { params }),
 };
 
+// ─── Async Consultations ──────────────────────────────────────────────────────
+export const asyncApi = {
+  create: data => api.post('/async', data),
+  list: () => api.get('/async'),
+  get: id => api.get(`/async/${id}`),
+  answer: (id, answer) => api.put(`/async/${id}/answer`, { answer }),
+  archive: id => api.put(`/async/${id}/archive`),
+};
+
+// ─── Feasibility ─────────────────────────────────────────────────────────────
+export const feasibilityApi = {
+  check: data => api.post('/feasibility', data),
+};
+
 export default api;

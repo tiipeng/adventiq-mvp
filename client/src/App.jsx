@@ -19,6 +19,9 @@ import BookingCalendar from './pages/BookingCalendar';
 import Payment from './pages/Payment';
 import BookingConfirmation from './pages/BookingConfirmation';
 import Reports from './pages/Reports';
+import LabCalendar from './pages/LabCalendar';
+import AsyncConsultation from './pages/AsyncConsultation';
+import AIRecommend from './pages/AIRecommend';
 
 // Components
 import ProtectedRoute from './components/ProtectedRoute';
@@ -45,10 +48,15 @@ function AppRoutes() {
       <Route path="/register" element={user ? <Navigate to={getDashboard(user.role)} replace /> : <Register />} />
 
       {/* Browse (public-ish) */}
-      <Route path="/experts"     element={<ExpertsList />} />
-      <Route path="/experts/:id" element={<ExpertProfile />} />
-      <Route path="/labs"        element={<LabsList />} />
-      <Route path="/labs/:id"    element={<LabProfile />} />
+      <Route path="/experts"          element={<ExpertsList />} />
+      <Route path="/experts/:id"      element={<ExpertProfile />} />
+      <Route path="/labs"             element={<LabsList />} />
+      <Route path="/labs/calendar"    element={<LabCalendar />} />
+      <Route path="/labs/:id"         element={<LabProfile />} />
+      <Route path="/ai-recommend"     element={<AIRecommend />} />
+
+      {/* Async consultation (public view, auth for booking) */}
+      <Route path="/async/:id"        element={<AsyncConsultation />} />
 
       {/* Business flows */}
       <Route path="/dashboard/business" element={

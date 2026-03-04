@@ -17,13 +17,58 @@ const statusMeta = {
   cancelled: { icon: '🚫', color: 'gray',   label: 'Cancelled',            desc: 'This booking has been cancelled.' },
 };
 
+function EmailPreview({ booking }) {
+  const [showPreview, setShowPreview] = useState(false);
+  const ref = `BK-${booking.id?.toString().padStart(4, '0')}`;
+  if (!showPreview) {
+    return (
+      <button onClick={() => setShowPreview(true)} className="btn-secondary text-sm w-full justify-center">
+        📧 Preview Confirmation Email
+      </button>
+    );
+  }
+  return (
+    <div className="border border-gray-200 rounded-xl overflow-hidden">
+      <div className="bg-gray-100 px-4 py-2.5 flex items-center justify-between">
+        <span className="text-xs font-semibold text-gray-700">📧 Email Preview (mock)</span>
+        <button onClick={() => setShowPreview(false)} className="text-xs text-gray-500 hover:text-gray-700">Close</button>
+      </div>
+      <div className="p-4 bg-white text-sm space-y-2">
+        <p><span className="text-gray-500">To:</span> <span className="font-medium">your@email.com</span></p>
+        <p><span className="text-gray-500">Subject:</span> <span className="font-medium">Booking confirmed — {booking.provider_name || booking.provider_type}</span></p>
+        <div className="border-t border-gray-100 pt-3 text-gray-700 space-y-2 text-xs">
+          <p>Hi there,</p>
+          <p>Your booking has been received and is awaiting confirmation from the provider.</p>
+          <p><strong>Provider:</strong> {booking.provider_name || `${booking.provider_type} #${booking.provider_id}`}</p>
+          <p><strong>Start:</strong> {fmtDate(booking.slot_start)}</p>
+          <p><strong>End:</strong> {fmtDate(booking.slot_end)}</p>
+          <p><strong>Total:</strong> €{booking.total_price}</p>
+          <p><strong>Reference:</strong> {ref}</p>
+          <p className="text-gray-500 mt-3">You'll be notified by email once the provider confirms. You can also track your booking in your dashboard.</p>
+        </div>
+      </div>
+      <div className="bg-gray-50 px-4 py-2 flex justify-end">
+        <button className="text-xs text-primary-600 hover:underline">Resend Email (mock)</button>
+      </div>
+    </div>
+  );
+}
+
 export default function BookingConfirmation() {
   const { id } = useParams();
   const [booking, setBooking] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [toast, setToast] = useState('');
 
   useEffect(() => {
-    bookingsApi.get(id).then(r => setBooking(r.data)).catch(console.error).finally(() => setLoading(false));
+    bookingsApi.get(id)
+      .then(r => {
+        setBooking(r.data);
+        setToast('Booking confirmed! Check your email.');
+        setTimeout(() => setToast(''), 4000);
+      })
+      .catch(console.error)
+      .finally(() => setLoading(false));
   }, [id]);
 
   if (loading) {
@@ -61,6 +106,14 @@ export default function BookingConfirmation() {
   return (
     <div className="flex min-h-screen bg-gray-50">
       <Sidebar />
+
+      {/* Toast */}
+      {toast && (
+        <div className="fixed top-20 right-4 z-50 bg-green-600 text-white px-5 py-3 rounded-xl shadow-lg flex items-center gap-2 text-sm font-medium animate-fade-in">
+          <span>✅</span> {toast}
+        </div>
+      )}
+
       <div className="flex-1 flex flex-col min-w-0">
         <Navbar />
         <main className="flex-1 p-6 max-w-2xl">
@@ -106,8 +159,8 @@ export default function BookingConfirmation() {
                 <p className="font-bold text-primary-600 text-lg">€{booking.total_price}</p>
               </div>
               <div>
-                <p className="text-gray-400 text-xs uppercase tracking-wide mb-1">Booked on</p>
-                <p className="font-medium text-gray-900">{fmtDate(booking.created_at)}</p>
+                <p className="text-gray-400 text-xs uppercase tracking-wide mb-1">Reference</p>
+                <p className="font-mono font-medium text-gray-900">BK-{booking.id?.toString().padStart(4,'0')}</p>
               </div>
             </div>
 
@@ -117,6 +170,11 @@ export default function BookingConfirmation() {
                 <p className="text-sm text-gray-700">{booking.problem_description}</p>
               </div>
             )}
+          </div>
+
+          {/* Email preview */}
+          <div className="card p-5 mb-6">
+            <EmailPreview booking={booking} />
           </div>
 
           {/* Report button if completed */}

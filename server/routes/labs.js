@@ -19,6 +19,8 @@ router.get('/', (req, res) => {
     ...l,
     services_json: JSON.parse(l.services_json || '[]'),
     availability_json: JSON.parse(l.availability_json || '{}'),
+    certifications_json: JSON.parse(l.certifications_json || '[]'),
+    equipment_json: JSON.parse(l.equipment_json || '[]'),
   }));
 
   if (service) {
@@ -53,6 +55,8 @@ router.get('/:id', (req, res) => {
 
   lab.services_json = JSON.parse(lab.services_json || '[]');
   lab.availability_json = JSON.parse(lab.availability_json || '{}');
+  lab.certifications_json = JSON.parse(lab.certifications_json || '[]');
+  lab.equipment_json = JSON.parse(lab.equipment_json || '[]');
 
   res.json(lab);
 });

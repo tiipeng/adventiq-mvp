@@ -11,6 +11,11 @@
     "seed": "npm --prefix server run seed"
   },
   "devDependencies": {
+    "@types/leaflet": "^1.9.21",
     "concurrently": "^8.2.2"
+  },
+  "dependencies": {
+    "leaflet": "^1.9.4",
+    "react-leaflet": "^4.2.1"
   }
 }

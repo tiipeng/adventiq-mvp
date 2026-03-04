@@ -18,12 +18,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // ─── Routes ───────────────────────────────────────────────────────────────────
-app.use('/api/auth',    require('./routes/auth'));
-app.use('/api/experts', require('./routes/experts'));
-app.use('/api/labs',    require('./routes/labs'));
-app.use('/api/bookings',require('./routes/bookings'));
-app.use('/api/reports', require('./routes/reports'));
-app.use('/api/admin',   require('./routes/admin'));
+app.use('/api/auth',        require('./routes/auth'));
+app.use('/api/experts',     require('./routes/experts'));
+app.use('/api/labs',        require('./routes/labs'));
+app.use('/api/bookings',    require('./routes/bookings'));
+app.use('/api/reports',     require('./routes/reports'));
+app.use('/api/admin',       require('./routes/admin'));
+app.use('/api/async',       require('./routes/async'));
+app.use('/api/feasibility', require('./routes/feasibility'));
 
 // ─── Health check ─────────────────────────────────────────────────────────────
 app.get('/api/health', (req, res) => res.json({ status: 'ok', service: 'AdventIQ API', version: '1.0.0' }));
