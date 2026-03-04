@@ -5,6 +5,7 @@ import Navbar from '../components/Navbar';
 import BookingCard from '../components/BookingCard';
 import { bookingsApi, asyncApi } from '../utils/api';
 import { useAuth } from '../context/AuthContext';
+import { MOCK_ASYNC, MOCK_BOOKINGS } from '../utils/mockData';
 
 function StatCard({ icon, label, value, sub, color = 'blue' }) {
   const colors = {
@@ -61,7 +62,7 @@ function AsyncQCard({ q }) {
   );
 }
 
-const TABS = ['Overview', 'Expert Bookings', 'Lab Bookings', "Async Q's", 'Follow-Ups'];
+const TABS = ['Overview', 'Expert Bookings', 'Lab Bookings', "Async Q's", 'Follow-Ups', 'Reports'];
 
 export default function BusinessDashboard() {
   const { user } = useAuth();
@@ -88,12 +89,18 @@ export default function BusinessDashboard() {
 
   useEffect(() => {
     bookingsApi.list()
-      .then(r => setBookings(Array.isArray(r?.data) ? r.data : []))
-      .catch(() => setBookings([]))
+      .then(response => {
+        const bookings = response?.data ?? MOCK_BOOKINGS;
+        setBookings(Array.isArray(bookings) ? bookings : MOCK_BOOKINGS);
+      })
+      .catch(() => setBookings(MOCK_BOOKINGS))
       .finally(() => setLoadingB(false));
     asyncApi.list()
-      .then(r => setAsyncQs(Array.isArray(r?.data) ? r.data : []))
-      .catch(() => setAsyncQs([]))
+      .then(response => {
+        const asyncItems = response?.data ?? MOCK_ASYNC;
+        setAsyncQs(Array.isArray(asyncItems) ? asyncItems : MOCK_ASYNC);
+      })
+      .catch(() => setAsyncQs(MOCK_ASYNC))
       .finally(() => setLoadingA(false));
   }, []);
 
@@ -359,6 +366,15 @@ export default function BusinessDashboard() {
               <p className="text-xs text-gray-400 text-center mt-6">
                 AI suggestions are based on expertise overlap with your past bookings. Confidence scores reflect semantic similarity.
               </p>
+            </div>
+          )}
+
+          {/* ── Reports ── */}
+          {tab === 'Reports' && (
+            <div className="card p-6">
+              <h2 className="text-lg font-semibold text-gray-900 mb-2">Reports</h2>
+              <p className="text-sm text-gray-500 mb-4">Reports are available as a secondary dashboard feature.</p>
+              <Link to="/reports" className="btn-secondary">Open Reports Table</Link>
             </div>
           )}
         </main>

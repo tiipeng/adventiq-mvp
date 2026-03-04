@@ -3,6 +3,7 @@ import Navbar from '../components/Navbar';
 import BookingCard from '../components/BookingCard';
 import { bookingsApi, expertsApi, asyncApi } from '../utils/api';
 import { useAuth } from '../context/AuthContext';
+import { MOCK_ASYNC, MOCK_BOOKINGS } from '../utils/mockData';
 
 const NAV = [
   { key: 'overview',     icon: '📊', label: 'Overview' },
@@ -107,11 +108,23 @@ export default function ExpertDashboard() {
   });
 
   const loadBookings = useCallback(() => {
-    bookingsApi.list().then(r => setBookings(Array.isArray(r?.data) ? r.data : [])).catch(() => setBookings([])).finally(() => setLoadingB(false));
+    bookingsApi.list()
+      .then(response => {
+        const bookings = response?.data ?? MOCK_BOOKINGS;
+        setBookings(Array.isArray(bookings) ? bookings : MOCK_BOOKINGS);
+      })
+      .catch(() => setBookings(MOCK_BOOKINGS))
+      .finally(() => setLoadingB(false));
   }, []);
 
   const loadAsync = useCallback(() => {
-    asyncApi.list().then(r => setAsyncQs(Array.isArray(r?.data) ? r.data : [])).catch(() => setAsyncQs([])).finally(() => setLoadingA(false));
+    asyncApi.list()
+      .then(response => {
+        const asyncItems = response?.data ?? MOCK_ASYNC;
+        setAsyncQs(Array.isArray(asyncItems) ? asyncItems : MOCK_ASYNC);
+      })
+      .catch(() => setAsyncQs(MOCK_ASYNC))
+      .finally(() => setLoadingA(false));
   }, []);
 
   useEffect(() => { loadBookings(); loadAsync(); }, [loadBookings, loadAsync]);

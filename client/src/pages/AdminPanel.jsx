@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import Navbar from '../components/Navbar';
 import { adminApi } from '../utils/api';
+import { MOCK_BOOKINGS, MOCK_USERS } from '../utils/mockData';
 
 const statusBadge = {
   approved: 'badge-green',
@@ -36,13 +37,49 @@ export default function AdminPanel() {
       adminApi.users(),
       adminApi.bookings(),
     ]).then(([s, u, b]) => {
-      setStats(typeof s.data === 'object' && s.data !== null && !Array.isArray(s.data) ? s.data : null);
-      setUsers(Array.isArray(u.data) ? u.data : []);
-      setBookings(Array.isArray(b.data) ? b.data : []);
+      const users = u?.data ?? MOCK_USERS;
+      const bookings = b?.data ?? MOCK_BOOKINGS;
+      const fallbackStats = {
+        users: {
+          total: (users ?? []).length,
+          pending: (users ?? []).filter((x) => x.status === 'pending').length,
+          business: (users ?? []).filter((x) => x.role === 'business').length,
+          expert: (users ?? []).filter((x) => x.role === 'expert').length,
+          lab: (users ?? []).filter((x) => x.role === 'lab').length,
+        },
+        bookings: {
+          total: (bookings ?? []).length,
+          pending: (bookings ?? []).filter((x) => x.status === 'pending').length,
+          completed: (bookings ?? []).filter((x) => x.status === 'completed').length,
+        },
+        revenue: {
+          total: (bookings ?? []).reduce((sum, x) => sum + (x.total_price || 0), 0),
+        },
+      };
+
+      setStats(typeof s?.data === 'object' && s.data !== null && !Array.isArray(s.data) ? s.data : fallbackStats);
+      setUsers(Array.isArray(users) ? users : MOCK_USERS);
+      setBookings(Array.isArray(bookings) ? bookings : MOCK_BOOKINGS);
     }).catch(() => {
-      setStats(null);
-      setUsers([]);
-      setBookings([]);
+      setStats({
+        users: {
+          total: MOCK_USERS.length,
+          pending: MOCK_USERS.filter((x) => x.status === 'pending').length,
+          business: MOCK_USERS.filter((x) => x.role === 'business').length,
+          expert: MOCK_USERS.filter((x) => x.role === 'expert').length,
+          lab: MOCK_USERS.filter((x) => x.role === 'lab').length,
+        },
+        bookings: {
+          total: MOCK_BOOKINGS.length,
+          pending: MOCK_BOOKINGS.filter((x) => x.status === 'pending').length,
+          completed: MOCK_BOOKINGS.filter((x) => x.status === 'completed').length,
+        },
+        revenue: {
+          total: MOCK_BOOKINGS.reduce((sum, x) => sum + (x.total_price || 0), 0),
+        },
+      });
+      setUsers(MOCK_USERS);
+      setBookings(MOCK_BOOKINGS);
     }).finally(() => setLoading(false));
   }, []);
 

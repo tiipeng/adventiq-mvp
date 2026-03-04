@@ -205,6 +205,9 @@ export default function ExpertProfile() {
                   <Link to={`/book/expert/${expert.id}`} className="btn-primary w-full justify-center text-base py-3">
                     Book Now →
                   </Link>
+                  <Link to={`/fast-consult/${expert.id}`} className="btn-fast w-full justify-center text-sm">
+                    Fast Consult
+                  </Link>
                   <Link to={`/async/${expert.id}`} className="btn-secondary w-full justify-center text-sm">
                     ✉ Ask Async Question
                   </Link>

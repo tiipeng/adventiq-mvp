@@ -4,6 +4,7 @@ import Navbar from '../components/Navbar';
 import BookingCard from '../components/BookingCard';
 import { bookingsApi, labsApi } from '../utils/api';
 import { useAuth } from '../context/AuthContext';
+import { MOCK_BOOKINGS } from '../utils/mockData';
 
 export default function LabDashboard() {
   const { user, profile, refreshProfile } = useAuth();
@@ -26,7 +27,13 @@ export default function LabDashboard() {
   }, [profile]);
 
   useEffect(() => {
-    bookingsApi.list().then(r => setBookings(Array.isArray(r?.data) ? r.data : [])).catch(() => setBookings([])).finally(() => setLoading(false));
+    bookingsApi.list()
+      .then(response => {
+        const bookings = response?.data ?? MOCK_BOOKINGS;
+        setBookings(Array.isArray(bookings) ? bookings : MOCK_BOOKINGS);
+      })
+      .catch(() => setBookings(MOCK_BOOKINGS))
+      .finally(() => setLoading(false));
   }, []);
 
   async function handleStatusChange(bookingId, status) {

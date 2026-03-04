@@ -64,7 +64,10 @@ export default function LabsList() {
     if (filters.city) params.location = filters.city;
     setLoading(true);
     labsApi.list(params)
-      .then(r => setLabs(Array.isArray(r?.data) ? r.data : MOCK_LABS))
+      .then(response => {
+        const labs = response?.data ?? MOCK_LABS;
+        setLabs(Array.isArray(labs) ? labs : MOCK_LABS);
+      })
       .catch(() => setLabs(MOCK_LABS))
       .finally(() => setLoading(false));
   }, [filters]);

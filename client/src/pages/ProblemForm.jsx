@@ -40,8 +40,10 @@ export default function ProblemForm() {
         (form.type === 'expert' || form.type === 'both') ? expertsApi.list(params) : Promise.resolve({ data: [] }),
         (form.type === 'lab'    || form.type === 'both') ? labsApi.list({ search: form.description }) : Promise.resolve({ data: [] }),
       ]);
-      setExperts(Array.isArray(eRes?.data) ? eRes.data : MOCK_EXPERTS);
-      setLabs(Array.isArray(lRes?.data) ? lRes.data : MOCK_LABS);
+      const experts = eRes?.data ?? MOCK_EXPERTS;
+      const labs = lRes?.data ?? MOCK_LABS;
+      setExperts(Array.isArray(experts) ? experts : MOCK_EXPERTS);
+      setLabs(Array.isArray(labs) ? labs : MOCK_LABS);
     } catch (e) {
       console.error(e);
       setExperts(MOCK_EXPERTS);

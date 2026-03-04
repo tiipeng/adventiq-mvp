@@ -15,7 +15,10 @@ export default function ExpertsList() {
     const params = Object.fromEntries(Object.entries(filters).filter(([, v]) => v !== ''));
     setLoading(true);
     expertsApi.list(params)
-      .then(r => setExperts(Array.isArray(r?.data) ? r.data : MOCK_EXPERTS))
+      .then(response => {
+        const experts = response?.data ?? MOCK_EXPERTS;
+        setExperts(Array.isArray(experts) ? experts : MOCK_EXPERTS);
+      })
       .catch(() => setExperts(MOCK_EXPERTS))
       .finally(() => setLoading(false));
   }, [filters]);

@@ -131,3 +131,51 @@ export const MOCK_LABS = [
     status: 'approved', member_since: '2024-01-01T00:00:00',
   },
 ];
+
+export const MOCK_BOOKINGS = [
+  {
+    id: 101,
+    provider_id: 1,
+    provider_type: 'expert',
+    provider_name: 'Dr. Klaus Müller',
+    slot_start: '2026-03-10T09:00:00',
+    slot_end: '2026-03-10T10:00:00',
+    total_price: 250,
+    status: 'confirmed',
+    problem_description: 'Model evaluation and deployment readiness review.',
+  },
+  {
+    id: 102,
+    provider_id: 1,
+    provider_type: 'lab',
+    provider_name: 'TUM Cleanroom Facility (ISO Class 5)',
+    slot_start: '2026-03-12T08:00:00',
+    slot_end: '2026-03-12T18:00:00',
+    total_price: 1500,
+    status: 'pending',
+    problem_description: 'Prototype fabrication slot booking.',
+  },
+];
+
+export const MOCK_ASYNC = [
+  {
+    id: 201,
+    expert_name: 'Prof. Agnieszka Nowak',
+    created_at: '2026-03-01T09:00:00',
+    sla_hours: 24,
+    status: 'pending',
+    question: 'Need guidance on CE marking requirements for a wearable.',
+    price: 149,
+  },
+];
+
+export const MOCK_REPORTS = [
+  {
+    id: 301,
+    booking_id: 101,
+    date: '2026-03-02T10:00:00',
+    expert: 'Dr. Klaus Müller',
+    topic: 'ML system readiness',
+    status: 'ready',
+  },
+];
