@@ -63,11 +63,11 @@ export default function BookingConfirmation() {
   useEffect(() => {
     bookingsApi.get(id)
       .then(r => {
-        setBooking(r.data);
-        setToast('Booking confirmed! Check your email.');
-        setTimeout(() => setToast(''), 4000);
+        const b = r?.data && typeof r.data === 'object' && !Array.isArray(r.data) ? r.data : null;
+        setBooking(b);
+        if (b) { setToast('Booking confirmed! Check your email.'); setTimeout(() => setToast(''), 4000); }
       })
-      .catch(console.error)
+      .catch(() => setBooking(null))
       .finally(() => setLoading(false));
   }, [id]);
 

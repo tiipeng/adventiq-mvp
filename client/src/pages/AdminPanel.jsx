@@ -36,10 +36,14 @@ export default function AdminPanel() {
       adminApi.users(),
       adminApi.bookings(),
     ]).then(([s, u, b]) => {
-      setStats(s.data);
-      setUsers(u.data);
-      setBookings(b.data);
-    }).catch(console.error).finally(() => setLoading(false));
+      setStats(typeof s.data === 'object' && s.data !== null && !Array.isArray(s.data) ? s.data : null);
+      setUsers(Array.isArray(u.data) ? u.data : []);
+      setBookings(Array.isArray(b.data) ? b.data : []);
+    }).catch(() => {
+      setStats(null);
+      setUsers([]);
+      setBookings([]);
+    }).finally(() => setLoading(false));
   }, []);
 
   async function updateUserStatus(userId, status) {

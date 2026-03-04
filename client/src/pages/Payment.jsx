@@ -53,10 +53,15 @@ export default function Payment() {
         total_price,
       });
 
-      const bookingId = res.data.id;
+      const bookingId = res?.data?.id;
+      if (!bookingId) throw new Error('no_backend');
       navigate(`/booking-confirmation/${bookingId}`, { replace: true });
     } catch (err) {
-      setError(err.response?.data?.error || 'Payment failed. Please try again.');
+      if (err.message === 'no_backend') {
+        setError('Demo mode: no backend available. Booking cannot be created on Netlify. This feature works when the backend is running locally.');
+      } else {
+        setError(err.response?.data?.error || 'Payment failed. Please try again.');
+      }
     } finally {
       setLoading(false);
     }
