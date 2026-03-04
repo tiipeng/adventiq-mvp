@@ -1,6 +1,17 @@
 // Mock data matching the seeded database.
 // Used as fallback when the API is unreachable (e.g. Netlify static deployment).
 
+export const MOCK_USERS = [
+  { id: 1, email: 'admin@adventiq.com',        password: 'Admin123!',    name: 'Admin User',             role: 'admin',    status: 'approved' },
+  { id: 2, email: 'anna.schmidt@techcorp.de',   password: 'Business123!', name: 'Anna Schmidt',           role: 'business', status: 'approved' },
+  { id: 3, email: 'jan.kowalski@innovate.pl',   password: 'Business123!', name: 'Jan Kowalski',           role: 'business', status: 'approved' },
+  { id: 4, email: 'dr.mueller@university.de',   password: 'Expert123!',   name: 'Dr. Klaus Müller',       role: 'expert',   status: 'approved' },
+  { id: 5, email: 'prof.nowak@warsaw-uni.pl',   password: 'Expert123!',   name: 'Prof. Agnieszka Nowak',  role: 'expert',   status: 'approved' },
+  { id: 6, email: 'dr.chen@fraunhofer.de',      password: 'Expert123!',   name: 'Dr. Wei Chen',           role: 'expert',   status: 'approved' },
+  { id: 7, email: 'cleanroom@tum.de',           password: 'Lab123!',      name: 'TUM Cleanroom Facility', role: 'lab',      status: 'approved' },
+  { id: 8, email: 'biotech.lab@uw.edu.pl',      password: 'Lab123!',      name: 'UW Biotech Lab',         role: 'lab',      status: 'approved' },
+];
+
 export const MOCK_EXPERTS = [
   {
     id: 1, user_id: 4,
