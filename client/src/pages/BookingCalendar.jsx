@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar';
 import BookingCalendar from '../components/BookingCalendar';
+import BookingFlowSteps from '../components/BookingFlowSteps';
 import { expertsApi, labsApi } from '../utils/api';
 import { MOCK_EXPERTS, MOCK_LABS } from '../utils/mockData';
 
@@ -37,6 +38,8 @@ export default function BookingFlowPage() {
 
   const [selectedServices, setSelectedServices] = useState([]);
   const [labDuration, setLabDuration] = useState(LAB_DURATIONS[0].id);
+  const [labRequest, setLabRequest] = useState('');
+  const [submitError, setSubmitError] = useState('');
 
   useEffect(() => {
     const load = async () => {
@@ -55,6 +58,17 @@ export default function BookingFlowPage() {
   }, [id, isExpert]);
 
   const availableDates = useMemo(() => Object.keys(provider?.availability_json ?? {}), [provider]);
+  const availableSlots = useMemo(() => {
+    if (!selectedDate) return [];
+    const raw = provider?.availability_json?.[selectedDate];
+    if (Array.isArray(raw)) return raw;
+    if (raw && typeof raw === 'object') return Object.keys(raw);
+    return [];
+  }, [provider, selectedDate]);
+  const labOptions = useMemo(
+    () => (provider?.equipment_json ?? provider?.services_json ?? []),
+    [provider]
+  );
 
   const totalPrice = useMemo(() => {
     if (!provider) return 0;
@@ -73,14 +87,27 @@ export default function BookingFlowPage() {
     setSelectedServices((prev) => (prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]));
   }
 
+  function getValidationErrors() {
+    const errors = [];
+    if (!selectedDate) errors.push('Select a date.');
+    if (!selectedSlot) errors.push('Select a time slot.');
+    if (isExpert && problem.trim().length < 50) errors.push('Problem description must be at least 50 characters.');
+    if (!isExpert && labOptions.length > 0 && selectedServices.length === 0) errors.push('Select at least one service/equipment option.');
+    return errors;
+  }
+
   function canContinue() {
-    if (!selectedDate || !selectedSlot) return false;
-    if (isExpert) return problem.trim().length >= 50;
-    return selectedServices.length > 0;
+    return getValidationErrors().length === 0;
   }
 
   function handleContinue() {
-    if (!provider || !canContinue()) return;
+    if (!provider) return;
+    const errors = getValidationErrors();
+    if (errors.length > 0) {
+      setSubmitError(errors[0]);
+      return;
+    }
+    setSubmitError('');
 
     const selectedSession = SESSION_TYPES.find((s) => s.id === sessionType) ?? SESSION_TYPES[0];
 
@@ -94,6 +121,7 @@ export default function BookingFlowPage() {
         problem,
         sessionType: selectedSession,
         selectedServices,
+        labRequest,
         labDuration,
         totalPrice,
       },
@@ -130,6 +158,7 @@ export default function BookingFlowPage() {
       <div className="flex-1 min-w-0">
         <Navbar />
         <div className="container-app py-8">
+          <BookingFlowSteps current={1} />
           <h1 className="mb-2">{isExpert ? 'Expert Booking' : 'Lab Booking'}</h1>
           <p className="text-[var(--text-muted)] mb-6">Complete your {titleCase(type)} booking with date, time, and payment.</p>
 
@@ -160,7 +189,10 @@ export default function BookingFlowPage() {
                       className="input"
                       minLength={50}
                       value={problem}
-                      onChange={(e) => setProblem(e.target.value)}
+                      onChange={(e) => {
+                        setProblem(e.target.value);
+                        if (submitError) setSubmitError('');
+                      }}
                       placeholder="Describe the research or technical challenge in detail..."
                     />
                     <small>{problem.length}/50 minimum</small>
@@ -187,13 +219,36 @@ export default function BookingFlowPage() {
                   <div>
                     <label className="label">Equipment / services</label>
                     <div className="grid sm:grid-cols-2 gap-2">
-                      {(provider.equipment_json ?? provider.services_json ?? []).map((item) => (
+                      {labOptions.map((item) => (
                         <label key={item} className="flex items-center gap-2 text-sm text-[var(--text-secondary)] border border-[var(--border)] rounded-[10px] px-3 py-2">
-                          <input type="checkbox" checked={selectedServices.includes(item)} onChange={() => toggleService(item)} />
+                          <input
+                            type="checkbox"
+                            checked={selectedServices.includes(item)}
+                            onChange={() => {
+                              toggleService(item);
+                              if (submitError) setSubmitError('');
+                            }}
+                          />
                           <span>{item}</span>
                         </label>
                       ))}
                     </div>
+                    {labOptions.length === 0 ? (
+                      <p className="text-sm text-[var(--text-muted)] mt-2">This lab has no predefined services listed. Continue by selecting date/time.</p>
+                    ) : null}
+                  </div>
+
+                  <div>
+                    <label className="label">Additional requirements (optional)</label>
+                    <textarea
+                      className="input"
+                      value={labRequest}
+                      onChange={(e) => {
+                        setLabRequest(e.target.value);
+                        if (submitError) setSubmitError('');
+                      }}
+                      placeholder="Add equipment preferences, sample requirements, or setup notes..."
+                    />
                   </div>
 
                   <div>
@@ -203,7 +258,10 @@ export default function BookingFlowPage() {
                         <button
                           key={duration.id}
                           type="button"
-                          onClick={() => setLabDuration(duration.id)}
+                          onClick={() => {
+                            setLabDuration(duration.id);
+                            if (submitError) setSubmitError('');
+                          }}
                           className={`h-10 rounded-[10px] border text-sm ${labDuration === duration.id ? 'border-[var(--accent)] text-[var(--accent)] bg-[var(--accent-light)]' : 'border-[var(--border)] text-[var(--text-secondary)]'}`}
                         >
                           {duration.label}
@@ -216,10 +274,18 @@ export default function BookingFlowPage() {
 
               <BookingCalendar
                 availableDates={availableDates}
+                availableSlots={availableSlots}
                 selectedDate={selectedDate}
                 selectedSlot={selectedSlot}
-                onDateSelect={setSelectedDate}
-                onSlotSelect={setSelectedSlot}
+                onDateSelect={(date) => {
+                  setSelectedDate(date);
+                  setSelectedSlot('');
+                  if (submitError) setSubmitError('');
+                }}
+                onSlotSelect={(slot) => {
+                  setSelectedSlot(slot);
+                  if (submitError) setSubmitError('');
+                }}
               />
             </div>
 
@@ -233,7 +299,13 @@ export default function BookingFlowPage() {
                   <div className="flex justify-between"><span>Type</span><span className="text-[var(--text-primary)]">{isExpert ? (SESSION_TYPES.find((s) => s.id === sessionType)?.label || '-') : (LAB_DURATIONS.find((d) => d.id === labDuration)?.label || '-')}</span></div>
                   <div className="flex justify-between"><span>Price</span><span className="text-[var(--accent)] font-semibold">€{totalPrice}</span></div>
                 </div>
-                <button disabled={!canContinue()} onClick={handleContinue} className="btn-primary w-full">Confirm Booking</button>
+                {submitError ? <p className="text-sm text-[var(--danger)] mb-2">{submitError}</p> : null}
+                <button
+                  onClick={handleContinue}
+                  className={`btn-primary w-full ${canContinue() ? '' : 'opacity-90'}`}
+                >
+                  Continue to Payment
+                </button>
               </div>
             </div>
           </div>

@@ -58,6 +58,8 @@ export default function ExpertDashboard() {
   const [editMode, setEditMode] = useState(false);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({ bio: '', location: '', hourly_rate: '', expertise_tags: '' });
+  const [bookingView, setBookingView] = useState('All');
+  const [bookingQuery, setBookingQuery] = useState('');
 
   useEffect(() => {
     bookingsApi.list()
@@ -122,6 +124,16 @@ export default function ExpertDashboard() {
   const earnings = bookings
     .filter((b) => ['confirmed', 'completed'].includes(b.status))
     .reduce((sum, booking) => sum + (booking.total_price || 0), 0);
+  const bookingViews = ['All', 'Pending', 'Confirmed', 'Completed', 'Rejected'];
+  const filteredBookings = bookings.filter((booking) => {
+    const matchesView = bookingView === 'All' || String(booking.status).toLowerCase() === bookingView.toLowerCase();
+    const q = bookingQuery.trim().toLowerCase();
+    const matchesQuery = !q ||
+      String(booking.id).toLowerCase().includes(q) ||
+      String(booking.business_name || booking.provider_name || '').toLowerCase().includes(q) ||
+      String(booking.problem_description || '').toLowerCase().includes(q);
+    return matchesView && matchesQuery;
+  });
 
   return (
     <div className="flex min-h-screen bg-[var(--bg-base)]">
@@ -158,9 +170,27 @@ export default function ExpertDashboard() {
 
           {tab === 'Bookings' && (
             <div className="space-y-3">
-              {(bookings ?? []).map((booking) => (
+              <div className="workspace-header rounded-[12px] p-3 mb-2">
+                <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
+                  <div className="tabs-underline border-none">
+                    {bookingViews.map((item) => (
+                      <button key={item} onClick={() => setBookingView(item)} className={`tab-item ${bookingView === item ? 'active' : ''}`}>
+                        {item}
+                      </button>
+                    ))}
+                  </div>
+                  <input
+                    className="input"
+                    placeholder="Search bookings..."
+                    value={bookingQuery}
+                    onChange={(e) => setBookingQuery(e.target.value)}
+                  />
+                </div>
+              </div>
+              {(filteredBookings ?? []).map((booking) => (
                 <BookingCard key={booking.id} booking={booking} actorRole="expert" showActions onStatusChange={handleStatusChange} />
               ))}
+              {!loadingB && filteredBookings.length === 0 ? <p className="text-sm text-[var(--text-muted)]">No bookings match current filters.</p> : null}
             </div>
           )}
 

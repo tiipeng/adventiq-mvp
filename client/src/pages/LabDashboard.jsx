@@ -13,6 +13,8 @@ export default function LabDashboard() {
   const [editMode, setEditMode] = useState(false);
   const [saving, setSaving]     = useState(false);
   const [form, setForm]         = useState({ name: '', description: '', location: '', price_per_day: '', services: '' });
+  const [bookingView, setBookingView] = useState('All');
+  const [bookingQuery, setBookingQuery] = useState('');
 
   useEffect(() => {
     if (profile) {
@@ -69,16 +71,26 @@ export default function LabDashboard() {
   const confirmed = bookings.filter(b => b.status === 'confirmed').length;
   const completed = bookings.filter(b => b.status === 'completed').length;
   const earnings  = bookings.filter(b => ['confirmed','completed'].includes(b.status)).reduce((s,b) => s+(b.total_price||0), 0);
+  const bookingViews = ['All', 'Pending', 'Confirmed', 'Completed', 'Rejected'];
+  const filteredBookings = bookings.filter((booking) => {
+    const matchesView = bookingView === 'All' || String(booking.status).toLowerCase() === bookingView.toLowerCase();
+    const q = bookingQuery.trim().toLowerCase();
+    const matchesQuery = !q ||
+      String(booking.id).toLowerCase().includes(q) ||
+      String(booking.business_name || booking.provider_name || '').toLowerCase().includes(q) ||
+      String(booking.problem_description || '').toLowerCase().includes(q);
+    return matchesView && matchesQuery;
+  });
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex min-h-screen bg-[var(--bg-subtle)]">
       <Sidebar />
       <div className="flex-1 flex flex-col min-w-0">
         <Navbar />
         <main className="flex-1 p-6 max-w-5xl">
           <div className="mb-6">
-            <h1 className="text-2xl font-bold text-gray-900">Lab Dashboard</h1>
-            <p className="text-gray-500 mt-1">{profile?.name || user?.name} · {profile?.location || 'Location not set'}</p>
+            <h1 className="text-2xl font-bold text-[var(--text-primary)]">Lab Dashboard</h1>
+            <p className="text-[var(--text-muted)] mt-1">{profile?.name || user?.name} · {profile?.location || 'Location not set'}</p>
           </div>
 
           {user?.status === 'pending' && (
@@ -99,8 +111,8 @@ export default function LabDashboard() {
               <div key={s.label} className="card p-5 flex items-center gap-4">
                 <div className="text-2xl">{s.icon}</div>
                 <div>
-                  <p className="text-2xl font-bold text-gray-900">{s.value}</p>
-                  <p className="text-sm text-gray-500">{s.label}</p>
+                  <p className="text-2xl font-bold text-[var(--text-primary)]">{s.value}</p>
+                  <p className="text-sm text-[var(--text-muted)]">{s.label}</p>
                 </div>
               </div>
             ))}
@@ -110,7 +122,7 @@ export default function LabDashboard() {
             {/* Lab profile */}
             <div className="card p-6">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="font-semibold text-gray-900">Lab Profile</h2>
+                <h2 className="font-semibold text-[var(--text-primary)]">Lab Profile</h2>
                 <button onClick={() => setEditMode(!editMode)} className="text-sm text-primary-600 hover:underline">
                   {editMode ? 'Cancel' : 'Edit'}
                 </button>
@@ -145,23 +157,23 @@ export default function LabDashboard() {
                   <div className="flex items-center gap-3">
                     <div className="w-14 h-14 bg-gradient-to-br from-green-500 to-teal-600 rounded-xl flex items-center justify-center text-2xl">🔬</div>
                     <div>
-                      <p className="font-semibold text-gray-900">{profile?.name || user?.name}</p>
-                      <p className="text-sm text-gray-500">📍 {profile?.location || '–'}</p>
+                      <p className="font-semibold text-[var(--text-primary)]">{profile?.name || user?.name}</p>
+                      <p className="text-sm text-[var(--text-muted)]">📍 {profile?.location || '–'}</p>
                     </div>
                   </div>
-                  <p className="text-sm text-gray-600">{profile?.description || 'No description yet.'}</p>
+                  <p className="text-sm text-[var(--text-muted)]">{profile?.description || 'No description yet.'}</p>
                   <div>
-                    <p className="text-xs font-medium text-gray-500 mb-2">Services offered</p>
+                    <p className="text-xs font-medium text-[var(--text-muted)] mb-2">Services offered</p>
                     <div className="flex flex-wrap gap-1">
                       {(profile?.services_json || []).map(s => <span key={s} className="badge-green">{s}</span>)}
                     </div>
                   </div>
-                  <div className="pt-2 border-t border-gray-100 flex justify-between text-sm">
-                    <span className="text-gray-500">Daily rate</span>
+                  <div className="pt-2 border-t border-[var(--border)] flex justify-between text-sm">
+                    <span className="text-[var(--text-muted)]">Daily rate</span>
                     <span className="font-semibold text-green-600">€{profile?.price_per_day}/day</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-500">Rating</span>
+                    <span className="text-[var(--text-muted)]">Rating</span>
                     <span className="font-semibold">⭐ {profile?.rating || '–'} ({profile?.reviews_count || 0})</span>
                   </div>
                 </div>
@@ -170,17 +182,34 @@ export default function LabDashboard() {
 
             {/* Bookings */}
             <div className="lg:col-span-2">
-              <h2 className="font-semibold text-gray-900 mb-4">Booking Requests</h2>
+              <h2 className="font-semibold text-[var(--text-primary)] mb-4">Booking Requests</h2>
+              <div className="workspace-header rounded-[12px] p-3 mb-3">
+                <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
+                  <div className="tabs-underline border-none">
+                    {bookingViews.map((item) => (
+                      <button key={item} onClick={() => setBookingView(item)} className={`tab-item ${bookingView === item ? 'active' : ''}`}>
+                        {item}
+                      </button>
+                    ))}
+                  </div>
+                  <input
+                    className="input"
+                    placeholder="Search bookings..."
+                    value={bookingQuery}
+                    onChange={(e) => setBookingQuery(e.target.value)}
+                  />
+                </div>
+              </div>
               {loading ? (
-                <div className="text-center py-12 text-gray-400">Loading…</div>
-              ) : bookings.length === 0 ? (
+                <div className="text-center py-12 text-[var(--text-muted)]">Loading…</div>
+              ) : filteredBookings.length === 0 ? (
                 <div className="card p-10 text-center">
                   <p className="text-3xl mb-2">📭</p>
-                  <p className="text-gray-500">No bookings yet.</p>
+                  <p className="text-[var(--text-muted)]">No bookings match current filters.</p>
                 </div>
               ) : (
                 <div className="space-y-3">
-                  {bookings.map(b => (
+                  {filteredBookings.map(b => (
                     <BookingCard key={b.id} booking={b} actorRole="lab" showActions onStatusChange={handleStatusChange} />
                   ))}
                 </div>

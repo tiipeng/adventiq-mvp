@@ -23,25 +23,25 @@ function EmailPreview({ expert, question, sla, bookingRef }) {
     );
   }
   return (
-    <div className="mt-4 border border-gray-200 rounded-xl overflow-hidden">
-      <div className="bg-gray-100 px-4 py-2.5 flex items-center justify-between">
-        <span className="text-xs font-semibold text-gray-700">📧 Email Preview (mock)</span>
-        <button onClick={() => setShowPreview(false)} className="text-xs text-gray-500 hover:text-gray-700">Close</button>
+    <div className="mt-4 border border-[var(--border)] rounded-xl overflow-hidden">
+      <div className="bg-[var(--bg-subtle)] px-4 py-2.5 flex items-center justify-between">
+        <span className="text-xs font-semibold text-[var(--text-muted)]">📧 Email Preview (mock)</span>
+        <button onClick={() => setShowPreview(false)} className="text-xs text-[var(--text-muted)] hover:text-[var(--text-muted)]">Close</button>
       </div>
       <div className="p-4 bg-white text-sm space-y-2">
-        <p><span className="text-gray-500">To:</span> <span className="font-medium">your@email.com</span></p>
-        <p><span className="text-gray-500">Subject:</span> <span className="font-medium">Async consultation confirmed — {expert?.name}</span></p>
-        <div className="border-t border-gray-100 pt-3 text-gray-700 space-y-2 text-xs">
+        <p><span className="text-[var(--text-muted)]">To:</span> <span className="font-medium">your@email.com</span></p>
+        <p><span className="text-[var(--text-muted)]">Subject:</span> <span className="font-medium">Async consultation confirmed — {expert?.name}</span></p>
+        <div className="border-t border-[var(--border)] pt-3 text-[var(--text-muted)] space-y-2 text-xs">
           <p>Hi there,</p>
           <p>Your async consultation request has been confirmed.</p>
           <p><strong>Expert:</strong> {expert?.name}</p>
           <p><strong>SLA:</strong> Response within {sla.hours} hours</p>
           <p><strong>Price paid:</strong> €{sla.price}</p>
           <p><strong>Reference:</strong> {bookingRef}</p>
-          <p className="text-gray-500 mt-3">You'll be notified by email when {expert?.name?.split(' ')[0]} responds. You can also check your dashboard under "Async Q's".</p>
+          <p className="text-[var(--text-muted)] mt-3">You'll be notified by email when {expert?.name?.split(' ')[0]} responds. You can also check your dashboard under "Async Q's".</p>
         </div>
       </div>
-      <div className="bg-gray-50 px-4 py-2 flex justify-end">
+      <div className="bg-[var(--bg-subtle)] px-4 py-2 flex justify-end">
         <button className="text-xs text-primary-600 hover:underline">Resend Email (mock)</button>
       </div>
     </div>
@@ -105,11 +105,11 @@ export default function AsyncConsultation() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-[var(--bg-subtle)]">
         <Navbar />
         <div className="max-w-2xl mx-auto px-4 py-12 animate-pulse">
-          <div className="h-8 bg-gray-200 rounded w-1/3 mb-4" />
-          <div className="h-64 bg-gray-200 rounded" />
+          <div className="h-8 bg-[var(--bg-subtle)] rounded w-1/3 mb-4" />
+          <div className="h-64 bg-[var(--bg-subtle)] rounded" />
         </div>
       </div>
     );
@@ -117,10 +117,10 @@ export default function AsyncConsultation() {
 
   if (!expert) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-[var(--bg-subtle)]">
         <Navbar />
         <div className="max-w-2xl mx-auto px-4 py-12 text-center">
-          <p className="text-gray-500">Expert not found.</p>
+          <p className="text-[var(--text-muted)]">Expert not found.</p>
           <Link to="/experts" className="btn-primary mt-4">Browse experts</Link>
         </div>
       </div>
@@ -128,7 +128,7 @@ export default function AsyncConsultation() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[var(--bg-subtle)]">
       <Navbar />
 
       {/* Toast */}
@@ -140,12 +140,12 @@ export default function AsyncConsultation() {
 
       <div className="max-w-2xl mx-auto px-4 sm:px-6 py-10">
         {/* Breadcrumb */}
-        <nav className="text-sm text-gray-400 mb-6 flex gap-2 items-center">
+        <nav className="text-sm text-[var(--text-muted)] mb-6 flex gap-2 items-center">
           <Link to="/experts" className="hover:text-primary-600">Experts</Link>
           <span>/</span>
           <Link to={`/experts/${expertId}`} className="hover:text-primary-600">{expert.name}</Link>
           <span>/</span>
-          <span className="text-gray-600">Async Question</span>
+          <span className="text-[var(--text-muted)]">Async Question</span>
         </nav>
 
         {/* Expert mini card */}
@@ -154,8 +154,8 @@ export default function AsyncConsultation() {
             <span className="text-white font-bold text-lg">{expert.name?.charAt(0)}</span>
           </div>
           <div className="flex-1">
-            <p className="font-semibold text-gray-900">{expert.name}</p>
-            <p className="text-sm text-gray-500">{expert.location} · €{expert.hourly_rate}/hr live</p>
+            <p className="font-semibold text-[var(--text-primary)]">{expert.name}</p>
+            <p className="text-sm text-[var(--text-muted)]">{expert.location} · €{expert.hourly_rate}/hr live</p>
           </div>
           {expert.avg_response_time && (
             <span className="text-xs px-2 py-1 bg-green-100 text-green-700 rounded-full font-medium">⚡ {expert.avg_response_time} response</span>
@@ -167,12 +167,12 @@ export default function AsyncConsultation() {
           {STEPS.map((s, i) => (
             <React.Fragment key={s}>
               <div className="flex items-center gap-1.5">
-                <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all ${step > i + 1 ? 'bg-green-500 text-white' : step === i + 1 ? 'bg-primary-600 text-white' : 'bg-gray-200 text-gray-400'}`}>
+                <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all ${step > i + 1 ? 'bg-green-500 text-white' : step === i + 1 ? 'bg-primary-600 text-white' : 'bg-[var(--bg-subtle)] text-[var(--text-muted)]'}`}>
                   {step > i + 1 ? '✓' : i + 1}
                 </div>
-                <span className={`text-xs hidden sm:block ${step === i + 1 ? 'text-gray-900 font-medium' : 'text-gray-400'}`}>{s}</span>
+                <span className={`text-xs hidden sm:block ${step === i + 1 ? 'text-[var(--text-primary)] font-medium' : 'text-[var(--text-muted)]'}`}>{s}</span>
               </div>
-              {i < STEPS.length - 1 && <div className={`flex-1 h-0.5 mx-2 ${step > i + 1 ? 'bg-green-400' : 'bg-gray-200'}`} />}
+              {i < STEPS.length - 1 && <div className={`flex-1 h-0.5 mx-2 ${step > i + 1 ? 'bg-green-400' : 'bg-[var(--border)]'}`} />}
             </React.Fragment>
           ))}
         </div>
@@ -180,8 +180,8 @@ export default function AsyncConsultation() {
         {/* Step 1: Write question */}
         {step === 1 && (
           <div className="card p-6 space-y-4">
-            <h2 className="text-xl font-bold text-gray-900">Write your question</h2>
-            <p className="text-sm text-gray-500">Ask anything within {expert.name?.split(' ')[0]}'s expertise. Be specific for a more useful answer.</p>
+            <h2 className="text-xl font-bold text-[var(--text-primary)]">Write your question</h2>
+            <p className="text-sm text-[var(--text-muted)]">Ask anything within {expert.name?.split(' ')[0]}'s expertise. Be specific for a more useful answer.</p>
 
             <div>
               <label className="label">Your question</label>
@@ -193,8 +193,8 @@ export default function AsyncConsultation() {
                 onChange={e => setQuestion(e.target.value)}
               />
               <div className="flex items-center justify-between mt-1">
-                <p className="text-xs text-gray-400">Min. 50 characters for a quality response</p>
-                <p className={`text-xs ${question.length < 50 ? 'text-gray-400' : 'text-green-600'}`}>{question.length} chars</p>
+                <p className="text-xs text-[var(--text-muted)]">Min. 50 characters for a quality response</p>
+                <p className={`text-xs ${question.length < 50 ? 'text-[var(--text-muted)]' : 'text-green-600'}`}>{question.length} chars</p>
               </div>
             </div>
 
@@ -217,25 +217,25 @@ export default function AsyncConsultation() {
         {/* Step 2: Select SLA */}
         {step === 2 && (
           <div className="card p-6 space-y-4">
-            <h2 className="text-xl font-bold text-gray-900">Select response time</h2>
-            <p className="text-sm text-gray-500">How quickly do you need an answer?</p>
+            <h2 className="text-xl font-bold text-[var(--text-primary)]">Select response time</h2>
+            <p className="text-sm text-[var(--text-muted)]">How quickly do you need an answer?</p>
 
             <div className="space-y-3">
               {SLA_OPTIONS.map(sla => (
                 <button
                   key={sla.hours}
                   onClick={() => setSelectedSla(sla)}
-                  className={`w-full p-4 rounded-xl border-2 text-left transition-all ${selectedSla.hours === sla.hours ? 'border-primary-500 bg-primary-50' : 'border-gray-200 hover:border-gray-300 bg-white'}`}
+                  className={`w-full p-4 rounded-xl border-2 text-left transition-all ${selectedSla.hours === sla.hours ? 'border-primary-500 bg-primary-50' : 'border-[var(--border)] hover:border-[var(--border-strong)] bg-white'}`}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <span className="text-2xl">{sla.icon}</span>
                       <div>
                         <div className="flex items-center gap-2">
-                          <span className="font-semibold text-gray-900">{sla.label}</span>
+                          <span className="font-semibold text-[var(--text-primary)]">{sla.label}</span>
                           {sla.recommended && <span className="px-1.5 py-0.5 bg-primary-100 text-primary-700 text-xs rounded-full font-medium">Recommended</span>}
                         </div>
-                        <p className="text-sm text-gray-500">{sla.desc}</p>
+                        <p className="text-sm text-[var(--text-muted)]">{sla.desc}</p>
                       </div>
                     </div>
                     <div className="text-right">
@@ -258,13 +258,13 @@ export default function AsyncConsultation() {
           <div className="space-y-4">
             {/* Order summary */}
             <div className="card p-5 bg-primary-50 border-primary-200">
-              <h3 className="font-semibold text-gray-900 mb-3">Order Summary</h3>
+              <h3 className="font-semibold text-[var(--text-primary)] mb-3">Order Summary</h3>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Async consultation — {expert.name}</span>
+                  <span className="text-[var(--text-muted)]">Async consultation — {expert.name}</span>
                   <span className="font-medium">€{selectedSla.price}</span>
                 </div>
-                <div className="flex justify-between text-gray-500">
+                <div className="flex justify-between text-[var(--text-muted)]">
                   <span>Platform fee (5%)</span>
                   <span>€{(selectedSla.price * 0.05).toFixed(2)}</span>
                 </div>
@@ -279,8 +279,8 @@ export default function AsyncConsultation() {
             <div className="card p-6 space-y-4">
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-xl">💳</span>
-                <h3 className="font-semibold text-gray-900">Payment Details</h3>
-                <span className="text-xs px-2 py-0.5 bg-gray-100 text-gray-500 rounded-full ml-auto">Mock — no real charge</span>
+                <h3 className="font-semibold text-[var(--text-primary)]">Payment Details</h3>
+                <span className="text-xs px-2 py-0.5 bg-[var(--bg-subtle)] text-[var(--text-muted)] rounded-full ml-auto">Mock — no real charge</span>
               </div>
 
               <div>
@@ -339,29 +339,29 @@ export default function AsyncConsultation() {
           <div className="text-center space-y-6">
             <div>
               <div className="text-6xl mb-4">✅</div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Question Submitted!</h2>
-              <p className="text-gray-500">
+              <h2 className="text-2xl font-bold text-[var(--text-primary)] mb-2">Question Submitted!</h2>
+              <p className="text-[var(--text-muted)]">
                 {expert.name} has been notified and will respond within <strong>{selectedSla.hours} hours</strong>.
               </p>
             </div>
 
             <div className="card p-5 text-left space-y-3">
-              <h3 className="font-semibold text-gray-900">Booking details</h3>
+              <h3 className="font-semibold text-[var(--text-primary)]">Booking details</h3>
               <div className="grid grid-cols-2 gap-3 text-sm">
                 <div>
-                  <p className="text-gray-400 text-xs uppercase tracking-wide mb-0.5">Reference</p>
+                  <p className="text-[var(--text-muted)] text-xs uppercase tracking-wide mb-0.5">Reference</p>
                   <p className="font-mono font-medium">AQ-{consultation.id?.toString().padStart(4,'0') || '0001'}</p>
                 </div>
                 <div>
-                  <p className="text-gray-400 text-xs uppercase tracking-wide mb-0.5">Expert</p>
+                  <p className="text-[var(--text-muted)] text-xs uppercase tracking-wide mb-0.5">Expert</p>
                   <p className="font-medium">{expert.name}</p>
                 </div>
                 <div>
-                  <p className="text-gray-400 text-xs uppercase tracking-wide mb-0.5">SLA</p>
+                  <p className="text-[var(--text-muted)] text-xs uppercase tracking-wide mb-0.5">SLA</p>
                   <p className="font-medium">{selectedSla.hours}h response</p>
                 </div>
                 <div>
-                  <p className="text-gray-400 text-xs uppercase tracking-wide mb-0.5">Paid</p>
+                  <p className="text-[var(--text-muted)] text-xs uppercase tracking-wide mb-0.5">Paid</p>
                   <p className="font-bold text-primary-600">€{(selectedSla.price * 1.05).toFixed(2)}</p>
                 </div>
               </div>

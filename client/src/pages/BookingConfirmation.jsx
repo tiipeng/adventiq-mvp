@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar';
+import BookingFlowSteps from '../components/BookingFlowSteps';
 
 export default function BookingConfirmation() {
   const { id } = useParams();
@@ -25,8 +26,14 @@ export default function BookingConfirmation() {
       <div className="flex-1 min-w-0">
         <Navbar />
         <div className="container-app py-8 max-w-3xl">
+          <BookingFlowSteps current={3} />
           <h1 className="mb-2">Booking Confirmed</h1>
           <p className="text-[var(--text-muted)] mb-6">Reference: <strong>{booking.id}</strong></p>
+
+          <div className="card p-5 mb-4 bg-[var(--accent-light)] border-[var(--accent)]">
+            <p className="text-[var(--accent)] font-semibold mb-1">Payment successful</p>
+            <p className="text-sm text-[var(--text-secondary)]">Your request has been submitted and is visible in your dashboard bookings.</p>
+          </div>
 
           <div className="card p-5 mb-4">
             <div className="grid sm:grid-cols-2 gap-3 text-sm">
@@ -43,9 +50,10 @@ export default function BookingConfirmation() {
             <p className="text-sm text-[var(--text-muted)]">Hi, your booking with {booking.provider?.name} on {booking.selectedDate} at {booking.selectedSlot} is confirmed. Reference {booking.id}.</p>
           </div>
 
-          <div className="flex gap-2">
-            <button className="btn-secondary">Add to Calendar</button>
-            <Link to="/dashboard/business" className="btn-primary">Go to Dashboard</Link>
+          <div className="grid sm:grid-cols-3 gap-2">
+            <Link to="/booking" className="btn-secondary justify-center">New Booking</Link>
+            <Link to="/reports" className="btn-secondary justify-center">View Reports</Link>
+            <Link to="/dashboard/business" className="btn-primary justify-center">Go to Dashboard</Link>
           </div>
         </div>
       </div>

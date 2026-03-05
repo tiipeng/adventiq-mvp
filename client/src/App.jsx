@@ -23,8 +23,14 @@ import AsyncConsultation from './pages/AsyncConsultation';
 import AIRecommend from './pages/AIRecommend';
 import FastConsult from './pages/FastConsult';
 import ConsultWorkspace from './pages/ConsultWorkspace';
+import BookingCenter from './pages/BookingCenter';
+import ProfileOverview from './pages/ProfileOverview';
+import ProfileSettings from './pages/ProfileSettings';
+import ProfileSecurity from './pages/ProfileSecurity';
+import ProfileNotifications from './pages/ProfileNotifications';
 
 import ProtectedRoute from './components/ProtectedRoute';
+import CommandPalette from './components/CommandPalette';
 
 function AppRoutes() {
   const { user, loading } = useAuth();
@@ -34,37 +40,46 @@ function AppRoutes() {
   }
 
   return (
-    <Routes>
-      <Route path="/" element={<Landing />} />
-      <Route path="/login" element={user ? <Navigate to={getDashboard(user.role)} replace /> : <Login />} />
-      <Route path="/register" element={user ? <Navigate to={getDashboard(user.role)} replace /> : <Register />} />
+    <>
+      <CommandPalette />
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path="/login" element={user ? <Navigate to={getDashboard(user.role)} replace /> : <Login />} />
+        <Route path="/register" element={user ? <Navigate to={getDashboard(user.role)} replace /> : <Register />} />
 
-      <Route path="/experts" element={<ExpertsList />} />
-      <Route path="/experts/:id" element={<ExpertProfile />} />
-      <Route path="/labs" element={<LabsList />} />
-      <Route path="/labs/calendar" element={<LabCalendar />} />
-      <Route path="/labs/:id" element={<LabProfile />} />
-      <Route path="/ai-recommend" element={<AIRecommend />} />
+        <Route path="/experts" element={<ExpertsList />} />
+        <Route path="/experts/:id" element={<ExpertProfile />} />
+        <Route path="/labs" element={<LabsList />} />
+        <Route path="/labs/calendar" element={<LabCalendar />} />
+        <Route path="/labs/:id" element={<LabProfile />} />
+        <Route path="/ai-recommend" element={<AIRecommend />} />
 
-      <Route path="/async/:id" element={<AsyncConsultation />} />
-      <Route path="/fast-consult/:id" element={<FastConsult />} />
-      <Route path="/consult/:id" element={<ConsultWorkspace />} />
+        <Route path="/async/:id" element={<AsyncConsultation />} />
+        <Route path="/fast-consult/:id" element={<FastConsult />} />
+        <Route path="/consult/:id" element={<ConsultWorkspace />} />
 
-      <Route path="/dashboard/business" element={<ProtectedRoute role="business"><BusinessDashboard /></ProtectedRoute>} />
-      <Route path="/problem-form" element={<ProtectedRoute role="business"><ProblemForm /></ProtectedRoute>} />
-      <Route path="/book/:type/:id" element={<ProtectedRoute role="business"><BookingCalendar /></ProtectedRoute>} />
-      <Route path="/payment" element={<ProtectedRoute role="business"><Payment /></ProtectedRoute>} />
-      <Route path="/booking-confirmation/:id" element={<ProtectedRoute role="business"><BookingConfirmation /></ProtectedRoute>} />
+        <Route path="/dashboard/business" element={<ProtectedRoute role="business"><BusinessDashboard /></ProtectedRoute>} />
+        <Route path="/booking" element={<ProtectedRoute role="business"><BookingCenter /></ProtectedRoute>} />
+        <Route path="/problem-form" element={<ProtectedRoute role="business"><ProblemForm /></ProtectedRoute>} />
+        <Route path="/book/:type/:id" element={<ProtectedRoute role="business"><BookingCalendar /></ProtectedRoute>} />
+        <Route path="/payment" element={<ProtectedRoute role="business"><Payment /></ProtectedRoute>} />
+        <Route path="/booking-confirmation/:id" element={<ProtectedRoute role="business"><BookingConfirmation /></ProtectedRoute>} />
 
-      <Route path="/reports" element={<ProtectedRoute role={['expert', 'lab', 'business']}><Reports /></ProtectedRoute>} />
-      <Route path="/reports/:bookingId" element={<ProtectedRoute role={['expert', 'lab', 'business']}><Reports /></ProtectedRoute>} />
+        <Route path="/reports" element={<ProtectedRoute role={['expert', 'lab', 'business']}><Reports /></ProtectedRoute>} />
+        <Route path="/reports/:bookingId" element={<ProtectedRoute role={['expert', 'lab', 'business']}><Reports /></ProtectedRoute>} />
 
-      <Route path="/dashboard/expert" element={<ProtectedRoute role="expert"><ExpertDashboard /></ProtectedRoute>} />
-      <Route path="/dashboard/lab" element={<ProtectedRoute role="lab"><LabDashboard /></ProtectedRoute>} />
-      <Route path="/dashboard/admin" element={<ProtectedRoute role="admin"><AdminPanel /></ProtectedRoute>} />
+        <Route path="/dashboard/expert" element={<ProtectedRoute role="expert"><ExpertDashboard /></ProtectedRoute>} />
+        <Route path="/dashboard/lab" element={<ProtectedRoute role="lab"><LabDashboard /></ProtectedRoute>} />
+        <Route path="/dashboard/admin" element={<ProtectedRoute role="admin"><AdminPanel /></ProtectedRoute>} />
 
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+        <Route path="/profile" element={<ProtectedRoute role={['business', 'expert', 'lab', 'admin']}><ProfileOverview /></ProtectedRoute>} />
+        <Route path="/profile/settings" element={<ProtectedRoute role={['business', 'expert', 'lab', 'admin']}><ProfileSettings /></ProtectedRoute>} />
+        <Route path="/profile/security" element={<ProtectedRoute role={['business', 'expert', 'lab', 'admin']}><ProfileSecurity /></ProtectedRoute>} />
+        <Route path="/profile/notifications" element={<ProtectedRoute role={['business', 'expert', 'lab', 'admin']}><ProfileNotifications /></ProtectedRoute>} />
+
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </>
   );
 }
 

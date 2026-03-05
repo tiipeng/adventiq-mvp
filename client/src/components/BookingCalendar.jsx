@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 
-const SLOT_OPTIONS = ['09:00', '10:30', '13:00', '14:30', '16:00'];
+const DEFAULT_SLOT_OPTIONS = ['09:00', '10:30', '13:00', '14:30', '16:00'];
 const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 function pad(n) {
@@ -11,7 +11,7 @@ function toKey(date) {
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
 }
 
-export default function BookingCalendar({ availableDates = [], selectedDate, selectedSlot, onDateSelect, onSlotSelect }) {
+export default function BookingCalendar({ availableDates = [], availableSlots = [], selectedDate, selectedSlot, onDateSelect, onSlotSelect }) {
   const [monthDate, setMonthDate] = useState(new Date());
   const now = useMemo(() => {
     const d = new Date();
@@ -71,8 +71,8 @@ export default function BookingCalendar({ availableDates = [], selectedDate, sel
       {selectedDate && (
         <div className="mt-4">
           <p className="text-sm text-[var(--text-primary)] font-medium mb-2">Available slots</p>
-          <div className="flex flex-wrap gap-2">
-            {SLOT_OPTIONS.map((slot) => (
+            <div className="flex flex-wrap gap-2">
+            {(availableSlots.length > 0 ? availableSlots : DEFAULT_SLOT_OPTIONS).map((slot) => (
               <button
                 key={slot}
                 onClick={() => onSlotSelect(slot)}

@@ -55,21 +55,19 @@ export default function ProblemForm() {
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex min-h-screen bg-[var(--bg-subtle)]">
       <Sidebar />
       <div className="flex-1 flex flex-col min-w-0">
         <Navbar />
         <main className="flex-1 p-6 max-w-5xl">
           <div className="mb-6">
-            <h1 className="text-2xl font-bold text-gray-900">Find the Right Expert or Lab</h1>
-            <p className="text-gray-500 mt-1">Describe your problem and we'll match you with the best options.</p>
+            <h1 className="text-2xl font-bold text-[var(--text-primary)]">Service Matcher</h1>
+            <p className="text-[var(--text-muted)] mt-1">Describe your challenge and browse matching experts or labs.</p>
           </div>
 
-          {/* AI placeholder note */}
-          <div className="mb-6 p-3 bg-blue-50 border border-blue-100 rounded-lg flex items-start gap-2">
-            <span className="text-blue-500 mt-0.5">🤖</span>
+          <div className="mb-6 p-3 bg-blue-50 border border-blue-100 rounded-lg">
             <p className="text-sm text-blue-700">
-              <strong>AI Matching:</strong> Smart AI-powered matching (matchExpertByAI) is coming soon. Currently using keyword-based filtering.
+              Prefer AI-first matching? Use <button className="underline font-semibold" onClick={() => navigate('/ai-recommend')}>AI Expert Finder</button>.
             </p>
           </div>
 
@@ -89,7 +87,7 @@ export default function ProblemForm() {
                         key={t.value}
                         type="button"
                         onClick={() => setForm(f => ({ ...f, type: t.value }))}
-                        className={`p-3 rounded-xl border-2 text-center transition-all ${form.type === t.value ? 'border-primary-500 bg-primary-50' : 'border-gray-200 hover:border-gray-300'}`}
+                        className={`p-3 rounded-xl border-2 text-center transition-all ${form.type === t.value ? 'border-primary-500 bg-primary-50' : 'border-[var(--border)] hover:border-[var(--border-strong)]'}`}
                       >
                         <span className="text-xl block mb-1">{t.icon}</span>
                         <span className="text-sm font-medium">{t.label}</span>
@@ -107,7 +105,7 @@ export default function ProblemForm() {
                         key={cat.value}
                         type="button"
                         onClick={() => handleCategorySelect(cat.value)}
-                        className={`p-3 rounded-xl border-2 text-left text-sm transition-all ${form.category === cat.value ? 'border-primary-500 bg-primary-50 text-primary-700' : 'border-gray-200 hover:border-gray-300 text-gray-700'}`}
+                        className={`p-3 rounded-xl border-2 text-left text-sm transition-all ${form.category === cat.value ? 'border-primary-500 bg-primary-50 text-primary-700' : 'border-[var(--border)] hover:border-[var(--border-strong)] text-[var(--text-muted)]'}`}
                       >
                         {cat.label}
                       </button>
@@ -154,12 +152,12 @@ export default function ProblemForm() {
             <div>
               <div className="flex items-center gap-3 mb-6">
                 <button onClick={() => setStep(1)} className="btn-secondary text-sm">← Refine search</button>
-                <p className="text-gray-500 text-sm">Found {experts.length} expert{experts.length !== 1 ? 's' : ''} and {labs.length} lab{labs.length !== 1 ? 's' : ''}</p>
+                <p className="text-[var(--text-muted)] text-sm">Found {experts.length} expert{experts.length !== 1 ? 's' : ''} and {labs.length} lab{labs.length !== 1 ? 's' : ''}</p>
               </div>
 
               {experts.length > 0 && (
                 <div className="mb-8">
-                  <h2 className="text-lg font-semibold text-gray-900 mb-4">Matching Experts</h2>
+                  <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-4">Matching Experts</h2>
                   <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     {experts.map(e => <ExpertCard key={e.id} expert={e} />)}
                   </div>
@@ -168,7 +166,7 @@ export default function ProblemForm() {
 
               {labs.length > 0 && (
                 <div>
-                  <h2 className="text-lg font-semibold text-gray-900 mb-4">Matching Labs</h2>
+                  <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-4">Matching Labs</h2>
                   <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     {labs.map(l => <LabCard key={l.id} lab={l} />)}
                   </div>
@@ -178,7 +176,7 @@ export default function ProblemForm() {
               {experts.length === 0 && labs.length === 0 && (
                 <div className="card p-12 text-center">
                   <p className="text-4xl mb-3">🔍</p>
-                  <p className="text-gray-500 mb-4">No matches found. Try a different description or category.</p>
+                  <p className="text-[var(--text-muted)] mb-4">No matches found. Try a different description or category.</p>
                   <button onClick={() => setStep(1)} className="btn-primary">Refine search</button>
                 </div>
               )}

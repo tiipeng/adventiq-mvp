@@ -4,6 +4,8 @@ import Navbar from '../components/Navbar';
 import { labsApi, feasibilityApi } from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 import { MOCK_LABS } from '../utils/mockData';
+import { getLabImage } from '../utils/imageAssets';
+import SmartImage from '../components/ui/SmartImage';
 
 export default function LabProfile() {
   const { id } = useParams();
@@ -44,11 +46,11 @@ export default function LabProfile() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-[var(--bg-subtle)]">
         <Navbar />
         <div className="max-w-4xl mx-auto px-4 py-12 animate-pulse">
-          <div className="h-8 bg-gray-200 rounded w-1/3 mb-8" />
-          <div className="h-48 bg-gray-200 rounded" />
+          <div className="h-8 bg-[var(--bg-subtle)] rounded w-1/3 mb-8" />
+          <div className="h-48 bg-[var(--bg-subtle)] rounded" />
         </div>
       </div>
     );
@@ -56,10 +58,10 @@ export default function LabProfile() {
 
   if (!lab) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-[var(--bg-subtle)]">
         <Navbar />
         <div className="max-w-4xl mx-auto px-4 py-12 text-center">
-          <p className="text-gray-500">Lab not found.</p>
+          <p className="text-[var(--text-muted)]">Lab not found.</p>
           <Link to="/labs" className="btn-primary mt-4">Back to labs</Link>
         </div>
       </div>
@@ -78,13 +80,13 @@ export default function LabProfile() {
   const verdictIcon = { 'Feasible': '✅', 'Conditional': '⚠️', 'Not Feasible': '❌' };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[var(--bg-subtle)]">
       <Navbar />
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <nav className="text-sm text-gray-400 mb-6 flex gap-2 items-center">
+        <nav className="text-sm text-[var(--text-muted)] mb-6 flex gap-2 items-center">
           <Link to="/labs" className="hover:text-primary-600">Labs</Link>
           <span>/</span>
-          <span className="text-gray-600">{lab.name}</span>
+          <span className="text-[var(--text-muted)]">{lab.name}</span>
         </nav>
 
         <div className="grid lg:grid-cols-3 gap-8">
@@ -93,32 +95,40 @@ export default function LabProfile() {
 
             {/* Header card */}
             <div className="card p-6">
+              <SmartImage
+                src={getLabImage(lab)}
+                alt={`${lab.name} laboratory`}
+                fallbackLabel="Laboratory"
+                className="mb-5 h-52 w-full rounded-2xl object-cover shadow-[var(--shadow-2)]"
+                loading="lazy"
+                decoding="async"
+              />
               <div className="flex items-start gap-5">
                 <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-teal-600 rounded-2xl flex items-center justify-center flex-shrink-0 text-4xl">🔬</div>
                 <div className="flex-1">
-                  <h1 className="text-2xl font-bold text-gray-900 mb-1">{lab.name}</h1>
-                  <p className="text-gray-500 flex items-center gap-2 mb-3">
+                  <h1 className="text-2xl font-bold text-[var(--text-primary)] mb-1">{lab.name}</h1>
+                  <p className="text-[var(--text-muted)] flex items-center gap-2 mb-3">
                     <span>📍</span>{lab.location || 'Location not set'}
                   </p>
                   <div className="flex flex-wrap items-center gap-4 text-sm">
                     {lab.rating > 0 && (
                       <span className="flex items-center gap-1 text-yellow-600 font-medium">
-                        ⭐ {lab.rating} <span className="text-gray-400 font-normal">({lab.reviews_count} reviews)</span>
+                        ⭐ {lab.rating} <span className="text-[var(--text-muted)] font-normal">({lab.reviews_count} reviews)</span>
                       </span>
                     )}
-                    {lab.capacity > 0 && <span className="text-gray-500">👥 {lab.capacity} researchers</span>}
-                    <span className="text-gray-400">Member since {new Date(lab.member_since || Date.now()).getFullYear()}</span>
+                    {lab.capacity > 0 && <span className="text-[var(--text-muted)]">👥 {lab.capacity} researchers</span>}
+                    <span className="text-[var(--text-muted)]">Member since {new Date(lab.member_since || Date.now()).getFullYear()}</span>
                   </div>
                 </div>
                 <div className="text-right">
                   <p className="text-2xl font-bold text-green-600">€{lab.price_per_day}</p>
-                  <p className="text-sm text-gray-400">per day</p>
+                  <p className="text-sm text-[var(--text-muted)]">per day</p>
                 </div>
               </div>
 
               {certifications.length > 0 && (
-                <div className="mt-4 pt-4 border-t border-gray-100">
-                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">Certifications</p>
+                <div className="mt-4 pt-4 border-t border-[var(--border)]">
+                  <p className="text-xs font-medium text-[var(--text-muted)] uppercase tracking-wide mb-2">Certifications</p>
                   <div className="flex flex-wrap gap-2">
                     {certifications.map(c => (
                       <span key={c} className="inline-flex items-center gap-1 px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg text-xs font-medium">
@@ -132,27 +142,27 @@ export default function LabProfile() {
 
             {/* Description */}
             <div className="card p-6">
-              <h2 className="font-semibold text-gray-900 mb-3">About this Lab</h2>
-              <p className="text-gray-600 leading-relaxed">{lab.description || 'No description provided.'}</p>
+              <h2 className="font-semibold text-[var(--text-primary)] mb-3">About this Lab</h2>
+              <p className="text-[var(--text-muted)] leading-relaxed">{lab.description || 'No description provided.'}</p>
             </div>
 
             {/* Pricing Tiers */}
             <div className="card p-6">
-              <h2 className="font-semibold text-gray-900 mb-4">Pricing Tiers</h2>
+              <h2 className="font-semibold text-[var(--text-primary)] mb-4">Pricing Tiers</h2>
               <div className="grid grid-cols-3 gap-3">
                 {[
                   { label: 'Hourly', price: lab.hourly_rate, unit: '/hr', icon: '⏱', best: false },
                   { label: 'Half-day (4h)', price: lab.half_day_rate, unit: '/4h', icon: '🌅', best: true },
                   { label: 'Full-day', price: lab.price_per_day, unit: '/day', icon: '📅', best: false },
                 ].map(tier => (
-                  <div key={tier.label} className={`relative p-4 rounded-xl border-2 text-center ${tier.best ? 'border-green-400 bg-green-50' : 'border-gray-200 bg-white'}`}>
+                  <div key={tier.label} className={`relative p-4 rounded-xl border-2 text-center ${tier.best ? 'border-green-400 bg-green-50' : 'border-[var(--border)] bg-white'}`}>
                     {tier.best && (
                       <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-2 py-0.5 bg-green-500 text-white text-xs rounded-full font-medium whitespace-nowrap">Best value</span>
                     )}
                     <div className="text-2xl mb-1">{tier.icon}</div>
-                    <p className="text-xs text-gray-500 mb-1">{tier.label}</p>
+                    <p className="text-xs text-[var(--text-muted)] mb-1">{tier.label}</p>
                     <p className="text-xl font-bold text-green-600">{tier.price > 0 ? `€${tier.price}` : '–'}</p>
-                    <p className="text-xs text-gray-400">{tier.unit}</p>
+                    <p className="text-xs text-[var(--text-muted)]">{tier.unit}</p>
                   </div>
                 ))}
               </div>
@@ -161,12 +171,12 @@ export default function LabProfile() {
             {/* Equipment */}
             {equipment.length > 0 && (
               <div className="card p-6">
-                <h2 className="font-semibold text-gray-900 mb-3">Available Equipment</h2>
+                <h2 className="font-semibold text-[var(--text-primary)] mb-3">Available Equipment</h2>
                 <div className="grid sm:grid-cols-2 gap-2">
                   {equipment.map(eq => (
-                    <div key={eq} className="flex items-center gap-2 p-2.5 bg-gray-50 rounded-lg border border-gray-100">
+                    <div key={eq} className="flex items-center gap-2 p-2.5 bg-[var(--bg-subtle)] rounded-lg border border-[var(--border)]">
                       <span className="w-1.5 h-1.5 bg-primary-500 rounded-full flex-shrink-0" />
-                      <span className="text-sm text-gray-700">{eq}</span>
+                      <span className="text-sm text-[var(--text-muted)]">{eq}</span>
                     </div>
                   ))}
                 </div>
@@ -175,7 +185,7 @@ export default function LabProfile() {
 
             {/* Services */}
             <div className="card p-6">
-              <h2 className="font-semibold text-gray-900 mb-3">Available Services</h2>
+              <h2 className="font-semibold text-[var(--text-primary)] mb-3">Available Services</h2>
               <div className="grid sm:grid-cols-2 gap-2">
                 {(lab.services_json || []).map(svc => (
                   <div key={svc} className="flex items-center gap-2 p-2.5 bg-green-50 rounded-lg border border-green-100">
@@ -188,9 +198,9 @@ export default function LabProfile() {
 
             {/* Availability */}
             <div className="card p-6">
-              <h2 className="font-semibold text-gray-900 mb-3">Upcoming Available Days</h2>
+              <h2 className="font-semibold text-[var(--text-primary)] mb-3">Upcoming Available Days</h2>
               {availDates.length === 0 ? (
-                <p className="text-gray-400 text-sm">No availability set yet.</p>
+                <p className="text-[var(--text-muted)] text-sm">No availability set yet.</p>
               ) : (
                 <div className="flex flex-wrap gap-2">
                   {availDates.slice(0, 12).map(date => (
@@ -206,8 +216,8 @@ export default function LabProfile() {
             <div className="card p-6" id="feasibility-section">
               <div className="flex items-center justify-between mb-1">
                 <div>
-                  <h2 className="font-semibold text-gray-900">Check Feasibility</h2>
-                  <p className="text-sm text-gray-500 mt-0.5">Assess if this lab can support your specific project</p>
+                  <h2 className="font-semibold text-[var(--text-primary)]">Check Feasibility</h2>
+                  <p className="text-sm text-[var(--text-muted)] mt-0.5">Assess if this lab can support your specific project</p>
                 </div>
                 <button
                   onClick={() => { setShowFeasibility(!showFeasibility); setFeasResult(null); }}
@@ -257,7 +267,7 @@ export default function LabProfile() {
               )}
 
               {feasResult && (
-                <div className={`mt-5 p-5 rounded-xl border-2 ${verdictStyle[feasResult.verdict] || 'bg-gray-50 border-gray-300'}`}>
+                <div className={`mt-5 p-5 rounded-xl border-2 ${verdictStyle[feasResult.verdict] || 'bg-[var(--bg-subtle)] border-[var(--border-strong)]'}`}>
                   <div className="flex items-center gap-3 mb-4">
                     <span className="text-3xl">{verdictIcon[feasResult.verdict]}</span>
                     <div>
@@ -273,8 +283,8 @@ export default function LabProfile() {
                       { label: 'Equipment Match', value: `${feasResult.equipment_match.score}%` },
                     ].map(item => (
                       <div key={item.label} className="bg-white bg-opacity-60 rounded-lg p-3 text-center">
-                        <p className="text-xs text-gray-500 mb-1">{item.label}</p>
-                        <p className="font-bold text-gray-900">{item.value}</p>
+                        <p className="text-xs text-[var(--text-muted)] mb-1">{item.label}</p>
+                        <p className="font-bold text-[var(--text-primary)]">{item.value}</p>
                       </div>
                     ))}
                   </div>
@@ -316,32 +326,32 @@ export default function LabProfile() {
           {/* Booking sidebar */}
           <div>
             <div className="card p-6 sticky top-24">
-              <h3 className="font-semibold text-gray-900 mb-4">Rent this Lab</h3>
+              <h3 className="font-semibold text-[var(--text-primary)] mb-4">Rent this Lab</h3>
               <div className="space-y-2.5 mb-5 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-gray-500">Hourly rate</span>
+                  <span className="text-[var(--text-muted)]">Hourly rate</span>
                   <span className="font-semibold text-green-600">€{lab.hourly_rate}/hr</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-500">Half-day (4h)</span>
+                  <span className="text-[var(--text-muted)]">Half-day (4h)</span>
                   <span className="font-semibold text-green-600">€{lab.half_day_rate}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-500">Full-day rate</span>
+                  <span className="text-[var(--text-muted)]">Full-day rate</span>
                   <span className="font-semibold text-green-600">€{lab.price_per_day}/day</span>
                 </div>
-                <div className="border-t border-gray-100 pt-2">
+                <div className="border-t border-[var(--border)] pt-2">
                   <div className="flex justify-between mb-1">
-                    <span className="text-gray-500">Location</span>
-                    <span className="text-gray-700 text-right text-xs">{lab.location || '–'}</span>
+                    <span className="text-[var(--text-muted)]">Location</span>
+                    <span className="text-[var(--text-muted)] text-right text-xs">{lab.location || '–'}</span>
                   </div>
                   <div className="flex justify-between mb-1">
-                    <span className="text-gray-500">Capacity</span>
-                    <span className="text-gray-700">{lab.capacity > 0 ? `${lab.capacity} researchers` : '–'}</span>
+                    <span className="text-[var(--text-muted)]">Capacity</span>
+                    <span className="text-[var(--text-muted)]">{lab.capacity > 0 ? `${lab.capacity} researchers` : '–'}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500">Available days</span>
-                    <span className="text-gray-700">{availDates.length} days</span>
+                    <span className="text-[var(--text-muted)]">Available days</span>
+                    <span className="text-[var(--text-muted)]">{availDates.length} days</span>
                   </div>
                 </div>
               </div>
@@ -359,7 +369,7 @@ export default function LabProfile() {
                   </button>
                 </div>
               ) : user ? (
-                <p className="text-xs text-gray-400 text-center">Only business accounts can make bookings.</p>
+                <p className="text-xs text-[var(--text-muted)] text-center">Only business accounts can make bookings.</p>
               ) : (
                 <div className="space-y-2">
                   <Link to="/login" className="btn-primary w-full justify-center">Sign in to book</Link>
@@ -367,14 +377,14 @@ export default function LabProfile() {
                 </div>
               )}
 
-              <p className="text-xs text-gray-400 text-center mt-3">No payment charged until confirmed</p>
+              <p className="text-xs text-[var(--text-muted)] text-center mt-3">No payment charged until confirmed</p>
 
               {certifications.length > 0 && (
-                <div className="mt-4 pt-4 border-t border-gray-100">
-                  <p className="text-xs font-medium text-gray-500 mb-2">Certifications</p>
+                <div className="mt-4 pt-4 border-t border-[var(--border)]">
+                  <p className="text-xs font-medium text-[var(--text-muted)] mb-2">Certifications</p>
                   <div className="space-y-1">
                     {certifications.map(c => (
-                      <p key={c} className="text-xs text-gray-600 flex items-center gap-1.5">
+                      <p key={c} className="text-xs text-[var(--text-muted)] flex items-center gap-1.5">
                         <span className="text-blue-500">🛡</span> {c}
                       </p>
                     ))}

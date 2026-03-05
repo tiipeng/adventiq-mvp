@@ -25,8 +25,10 @@ export default function AIRecommend() {
   const [text, setText] = useState('');
   const [results, setResults] = useState([]);
   const [sort, setSort] = useState('Match Score');
+  const [searched, setSearched] = useState(false);
 
   async function findExperts() {
+    setSearched(true);
     try {
       const response = await expertsApi.list({ search: text });
       const experts = response?.data ?? MOCK_EXPERTS;
@@ -93,6 +95,15 @@ export default function AIRecommend() {
                   <ExpertCard key={expert.id} expert={expert} matchScore={expert._score} matchReasons={expert._reasons} />
                 ))}
               </div>
+            </section>
+          )}
+
+          {searched && sorted.length === 0 && (
+            <section className="card p-8 text-center">
+              <p className="text-3xl mb-2">🔎</p>
+              <h3 className="mb-1">No expert matches yet</h3>
+              <p className="text-sm text-[var(--text-secondary)] mb-4">Try a more specific project description, domain, or expected outcome.</p>
+              <button className="btn-secondary" onClick={() => setText(EXAMPLES[0])}>Use an example prompt</button>
             </section>
           )}
         </div>

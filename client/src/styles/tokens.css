@@ -1,23 +1,64 @@
 :root {
-  --bg-base: #F8F9FB;
-  --bg-surface: #FFFFFF;
-  --bg-subtle: #F1F4F8;
-  --border: #E2E7EF;
-  --border-strong: #C9D2DF;
-  --text-primary: #0F1A2E;
-  --text-secondary: #4A5568;
-  --text-muted: #8A96A8;
-  --accent: #1B4FD8;
-  --accent-hover: #1640B0;
-  --accent-light: #EEF2FF;
-  --success: #16A34A;
-  --warning: #D97706;
-  --danger: #DC2626;
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
-  --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
-  --shadow-lg: 0 8px 24px rgba(0,0,0,0.10);
-  --transition: 150ms ease;
+  /* Color system */
+  --bg-canvas: #06080e;
+  --bg-base: #0a0f1a;
+  --bg-surface: #111a2a;
+  --bg-elevated: #152237;
+  --bg-subtle: #0f1728;
+  --bg-overlay: rgba(4, 8, 18, 0.72);
+
+  --border: rgba(139, 165, 203, 0.2);
+  --border-strong: rgba(152, 185, 231, 0.35);
+
+  --text-primary: #f5f8ff;
+  --text-secondary: #cfdaed;
+  --text-muted: #8fa4c5;
+
+  --accent: #4f7dff;
+  --accent-hover: #6591ff;
+  --accent-press: #3d68df;
+  --accent-light: rgba(79, 125, 255, 0.14);
+  --accent-alt: #2cd5ff;
+
+  --success: #0f9f76;
+  --warning: #c77806;
+  --danger: #d8374a;
+
+  /* Typography scale */
+  --font-sans: 'Space Grotesk', 'Manrope', 'Avenir Next', 'Segoe UI', sans-serif;
+  --font-mono: 'IBM Plex Mono', 'SFMono-Regular', Menlo, monospace;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+
+  --leading-tight: 1.2;
+  --leading-normal: 1.55;
+
+  /* Spacing system */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* Radius */
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+
+  /* Elevation */
+  --shadow-1: 0 2px 6px rgba(3, 8, 18, 0.35);
+  --shadow-2: 0 12px 32px rgba(2, 7, 17, 0.46);
+  --shadow-3: 0 34px 84px rgba(1, 6, 16, 0.58);
+
+  --transition-fast: 120ms cubic-bezier(.2, .8, .2, 1);
+  --transition-base: 180ms cubic-bezier(.2, .8, .2, 1);
 }
